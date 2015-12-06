@@ -3,7 +3,7 @@
 ## Basics
 
 ### Word Count
-A 'hello world' in a space of Map Reduce and big data processing. The example parses a text file comprising ten paragraphs of random text (lorem ipsum) and produces a lexically ordered set of word counts.
+A _hello world_ in a space of Map Reduce and big data processing. The example parses a text file comprising ten paragraphs of random text (lorem ipsum) and produces a lexically ordered set of word counts.
 
 Output example:
 ```
