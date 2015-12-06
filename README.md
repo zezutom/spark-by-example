@@ -5,6 +5,23 @@
 ### Word Count
 A 'hello world' in a space of Map Reduce and big data processing. The example parses a text file comprising ten paragraphs of random text (lorem ipsum) and produces a lexically ordered set of word counts.
 
+Output example:
+```
+(a,9)
+(ac,13)
+(accumsan,1)
+(ad,1)
+(adipiscing,1)
+(aenean,6)
+(aliquam,7)
+..
+(lorem,5)
+(luctus,5)
+(maecenas,1)
+(magna,8)
+..
+```
+
 #### Used Technologies
 * Apache Spark 1.5.2 compiled for Scala 2.11
 * Hadoop 2.7.1
