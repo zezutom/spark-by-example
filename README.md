@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zezutom/spark-by-example.svg?branch=master)](https://travis-ci.org/zezutom/spark-by-example)
+[![Coverage Status](https://coveralls.io/repos/zezutom/spark-by-example/badge.svg?branch=master&service=github)](https://coveralls.io/github/zezutom/spark-by-example?branch=master)
 # Spark by Example
 
 ## Basics
