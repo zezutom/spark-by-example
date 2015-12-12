@@ -41,12 +41,16 @@ Next, start the Name Node
 ```
 $HADOOP_PREFIX/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start namenode
 ```
-##### Step 2 - Copy a Text File to HDFS
+##### Step 2 - Create a log directory
+```
+hadoop fs -mkdir -p /var/log
+```
+##### Step 3 - Copy a Text File to HDFS
 The input file is located in the resources directory. Please copy it to HDFS as follows:
 ```
 hadoop fs -copyFromLocal src/main/resources/loremipsum.txt /var/log/
 ```
-##### Step 3 - Build the Project
+##### Step 4 - Build the Project
 Run the following command in the project root directory:
 ```
 sbt package
