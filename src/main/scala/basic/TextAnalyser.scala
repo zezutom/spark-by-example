@@ -23,6 +23,16 @@ import scala.io.Source
   * 2. Upload the downloaded file to HDFS (/var/log/)
   *     example (Mac OS X): hadoop fs -copyFromLocal ~/Downloads/2000010.txt /var/log/
   *
+  * If all goes fine you should be rewarded with the following output:
+  *
+  * characters: 568889, words: 101838, the most frequent words:
+  * (captain,564)
+  * (nautilus,493)
+  * (nemo,334)
+  * (ned,283)
+  * (sea,273)
+  *
+  *
   * Alternatively, change the 'main' method to accept a file of your choice as an input. For instance,
   * you could use the 'loremipsum.txt' attached to this project as a resource.
   *
@@ -69,7 +79,6 @@ object TextAnalyser {
     val sc = AppUtil.sc("Text Analysis")
 
     val stats = new TextAnalyser(sc, 5).analyse(sc.textFile(AppUtil.hdfs("/var/log/2000010.txt")))
-
-    println(s"STATS: $stats")
+    println(stats)
   }
 }

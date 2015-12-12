@@ -45,6 +45,7 @@ off
 on
 onto
 opposite
+out
 outside
 over
 past
@@ -81,7 +82,9 @@ i
 me
 you
 he
+him
 she
+her
 it
 we
 us
@@ -100,12 +103,16 @@ whom
 
 # POSSESSIVE PRONOUNS
 my
+mine
 your
-her
+yours
 his
+hers
 its
 their
+theirs
 our
+ours
 
 # VERBS
 be
@@ -140,3 +147,8 @@ could
 should
 will
 would
+when
+then
+than
+there
+where
