@@ -9,7 +9,6 @@ import org.apache.spark.rdd.RDD
   * --class "basic.WordCount" \
   * target/scala-2.11/spark-by-example_2.11-1.0.jar
   */
-
 class WordCount extends Transformer[String, (String, Int)] {
 
   def transform(rdd: RDD[String]): RDD[(String, Int)] = {
