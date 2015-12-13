@@ -147,6 +147,27 @@ characters: 568889, words: 101838, the most frequent words:
 
 Source: [TextAnalyser.scala](https://github.com/zezutom/spark-by-example/blob/master/src/main/scala/basic/TextAnalyser.scala), [TextAnalyserTest.scala](https://github.com/zezutom/spark-by-example/blob/master/src/test/scala/basic/TextAnalyserTest.scala)
 
+#### Run the Example
 
+##### Step 1 - Download the Book
+[20.000 Leagues under the Sea by Jules Verne](http://www.textfiles.com/etext/FICTION/2000010.txt)
+
+##### Step 2 - Copy the Downloaded TXT file to HDFS
+The example below is for Mac OS X, your 'downloads' directory location might differ.
+```
+hadoop fs -copyFromLocal ~/Downloads/2000010.txt /var/log/
+```
+##### Step 3 - Build the Project
+Run the following command in the project root directory:
+```
+sbt package
+```
+##### Step 4 - Submit to Spark
+```
+$SPARK_HOME/bin/spark-submit --class "basic.TextAnalyser" target/scala-2.11/spark-by-example_2.11-1.0.jar
+```
+
+#### View the Results
+The results are printed directly into the console, so no extra work is needed.
 
 
