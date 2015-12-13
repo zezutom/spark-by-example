@@ -43,6 +43,18 @@ Resilient Distributed Datasets (RDDs):
 
 See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#resilient-distributed-datasets-rdds) for more details.
 
+RDD Operations
+* Transformations
+  * create new RDDs according to transformation rules
+  * are lazy, ie. nothing happens until the changes are 'committed' by calling an action
+  * represent the Map part of the Map Reduce pattern
+* Actions
+ * trigger transformation workflow 
+ * return aggregated result back to the driver program (beware: memory consumption and resource utilization)
+ * represent the Reduce part of the Map Reduce pattern
+
+See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#rdd-operations) for more details.
+
 A _word count_ example is a _hello world_ in a space of Map Reduce and big data processing. The example parses a text file comprising ten paragraphs of random text (lorem ipsum) and produces a lexically ordered set of word counts.
 
 Output:
@@ -89,6 +101,8 @@ Don't forget to delete the output HDFS location, before submitting the job again
 ```
 hadoop fs -rm -r /var/out/wordcount/
 ```
+
+### Accumulators: Text Analysis
 
 
 
