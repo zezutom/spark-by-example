@@ -45,7 +45,7 @@ See the official [Programming Guide](http://spark.apache.org/docs/latest/program
 
 A _word count_ example is a _hello world_ in a space of Map Reduce and big data processing. The example parses a text file comprising ten paragraphs of random text (lorem ipsum) and produces a lexically ordered set of word counts.
 
-Output example:
+Output:
 ```
 (a,9)
 (ac,13)
