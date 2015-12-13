@@ -40,6 +40,7 @@ Resilient Distributed Datasets (RDDs):
 * fault-tolerant, as in zero data loss
 * are operated on in parallel: big data, cluster of workers
 * contain collection of data elements: text, numbers, business entities etc.
+
 See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#resilient-distributed-datasets-rdds) for more details.
 
 A _word count_ example is a _hello world_ in a space of Map Reduce and big data processing. The example parses a text file comprising ten paragraphs of random text (lorem ipsum) and produces a lexically ordered set of word counts.
