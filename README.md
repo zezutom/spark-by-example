@@ -7,8 +7,8 @@
   - [Toolbox](#toolbox) 
   - [Preparation Steps](#preparation-steps)
 - [Basics](#basics)
-  - [RDD Transformations: Word Count](#rdd-transformations:word-count)
-  - [Accumulators: Text Analysis](#text-analysis)
+  - [RDD Transformations: Word Count](#rdd-transformations-word-count)
+  - [Accumulators: Text Analysis](#accumulators-text-analysis)
 
 ## Get Started
 
