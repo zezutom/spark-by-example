@@ -104,7 +104,13 @@ hadoop fs -rm -r /var/out/wordcount/
 
 ### Accumulators: Text Analysis
 
+Accumulators:
+* counters or sums that can be reliably used in parallel processing
+* native support for numeric types, extensions possible via API
+* workers (tranformation) can modify, but cannot read
+* only a driver (action) can read the accumulated value
 
+See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#accumulators-a-nameaccumlinka) for more details.
 
 
 
