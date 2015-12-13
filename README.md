@@ -73,6 +73,9 @@ Output:
 (magna,8)
 ..
 ```
+
+Source: [WordCount.scala](https://github.com/zezutom/spark-by-example/blob/master/src/main/scala/basic/TextAnalyser.scala), [WordCountTest.scala](https://github.com/zezutom/spark-by-example/blob/master/src/test/scala/basic/WordCountTest.scala)
+
 #### Run the Example
 
 ##### Step 1 - Copy a Text File to HDFS
@@ -112,6 +115,37 @@ Accumulators:
 
 See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#accumulators-a-nameaccumlinka) for more details.
 
+The problem of text analysis expands on the _word count_ example from the [previous section](#rdd-operations-word-count). Accumulators are applied to collect standard and overly not too interesting facts about the analysed text, such as a total number of characters and words. 
+
+Arguably the most exciting part is an effort to capture the essence of a piece of an English text, such as a book, within _N_ most frequently used words. 
+
+First and foremost, casual expressions that don't carry substantial information need to be filtered out. The [English Club](https://www.englishclub.com) helped me arrive at a list of common words I choose to skip: [commonwords.txt](https://github.com/zezutom/spark-by-example/blob/master/src/main/resources/commonwords.txt).
+
+The actual word count naturally makes use of the logic implemented in the _word count_ example. However, minor tweaks apply:
+* word count pairs are sorted by counts rather than alphabetically
+* descending sort order guarantees the most frequent pairs are always on top of the list
+
+Code excerpt:
+```
+...
+.filter(!commonWords.contains(_))  // Filter out all too common words
+.map((_, 1))
+.reduceByKey(_ + _)
+.sortBy(_._2, ascending = false)
+```
+
+Now, the fun part. Forget the boring 'loremipsum' and reach out for some genuine master piece, such as _20.000 Leagues under the Sea_ by Jules Verne. Courtesy of [textfiles.com](http://www.textfiles.com). Here is what the text analyser concluded about the remarkable book:
+
+```
+characters: 568889, words: 101838, the most frequent words:
+(captain,564)
+(nautilus,493)
+(nemo,334)
+(ned,283)
+(sea,273)
+```
+
+Source: [TextAnalyser.scala](https://github.com/zezutom/spark-by-example/blob/master/src/main/scala/basic/TextAnalyser.scala), [TextAnalyserTest.scala](https://github.com/zezutom/spark-by-example/blob/master/src/test/scala/basic/TextAnalyserTest.scala)
 
 
 
