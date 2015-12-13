@@ -74,7 +74,7 @@ Output:
 ..
 ```
 
-Source: [WordCount.scala](https://github.com/zezutom/spark-by-example/blob/master/src/main/scala/basic/TextAnalyser.scala), [WordCountTest.scala](https://github.com/zezutom/spark-by-example/blob/master/src/test/scala/basic/WordCountTest.scala)
+Source: [WordCount.scala](https://github.com/zezutom/spark-by-example/blob/master/src/main/scala/basic/WordCount.scala), [WordCountTest.scala](https://github.com/zezutom/spark-by-example/blob/master/src/test/scala/basic/WordCountTest.scala)
 
 #### Run the Example
 
