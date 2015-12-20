@@ -30,6 +30,6 @@ class WordCountTest extends FunSuite with SharedSparkContext {
   }
 
   private def verify(seq: Seq[String]): Unit = {
-    assert(new WordCount().transform(sc.makeRDD(seq)).collect().toList === expected)
+    assertResult(expected)(new WordCount().transform(sc.makeRDD(seq)).collect().toList)
   }
 }

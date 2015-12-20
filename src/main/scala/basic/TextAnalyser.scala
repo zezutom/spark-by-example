@@ -36,13 +36,7 @@ import scala.io.Source
   *
   */
 class TextAnalyser(val sc: SparkContext, val topN: Int) {
-
-  val _commonWords = sc.broadcast(
-    Source.fromInputStream(getClass.getResourceAsStream("/commonwords.txt"))
-    .getLines()
-    .filter(!_.isEmpty)
-    .filter(!_.startsWith("#"))   // Comments
-    .toList)
+  val _commonWords = sc.broadcast(TextAnalyser.loadCommonWords())
   val _totalChars = sc.accumulator(0, "Total Characters")
   val _totalWords = sc.accumulator(0, "Total Words")
 
@@ -75,6 +69,14 @@ class TextStats(val totalChars: Int, val totalWords: Int, val mostFrequentWords:
 }
 
 object TextAnalyser {
+
+
+  def loadCommonWords(): List[String] =
+    Source.fromInputStream(getClass.getResourceAsStream("/commonwords.txt"))
+    .getLines()
+      .filter(!_.isEmpty)
+      .filter(!_.startsWith("#"))   // Comments
+      .toList
 
   def main(args: Array[String]) {
     // Instantiate Spark

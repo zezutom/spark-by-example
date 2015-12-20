@@ -9,17 +9,21 @@ class TextAnalyserTest extends FunSuite with SharedSparkContext {
   val text = "The quick brown fox jumps over a lazy dog. Quick zephyrs blow, vexing daft Jim. Quick brown fox and zephyrs ..."
 
   test("Character count") {
-    assert(analyse.totalChars === text.length)
+    assertResult(text.length)(analyse.totalChars)
   }
 
   test("Word count") {
-    assert(analyse.totalWords === 20) // as in words in the 'text' constant
+    assertResult(20)(analyse.totalWords) // as in words in the 'text' constant
   }
 
   test("Top N words, lexical order applies if two or more words have the same frequency") {
-    assert(analyse.mostFrequentWords === Seq(("quick", 3), ("brown", 2), ("fox", 2), ("zephyrs", 2)))
+    assertResult(Seq(("quick", 3), ("brown", 2), ("fox", 2), ("zephyrs", 2)))(analyse.mostFrequentWords)
   }
 
+  test("Common words are available via broadcast") {
+    val analyser = new TextAnalyser(sc, 4)
+    assertResult(TextAnalyser.loadCommonWords())(analyser._commonWords.value)
+  }
   private def analyse: TextStats =  {
     new TextAnalyser(sc, 4).analyse(sc.makeRDD(Seq(text)))
   }
