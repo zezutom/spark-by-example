@@ -8,7 +8,7 @@
   - [Preparation Steps](#preparation-steps)
 - [Basics](#basics)
   - [RDD Operations: Word Count](#rdd-operations-word-count)
-  - [Accumulators: Text Analysis](#accumulators-text-analysis)
+  - [Accumulators and Broadcast Variables: Text Analysis](#accumulators-and-broadcast-variables-text-analysis)
 
 ## Get Started
 
@@ -109,7 +109,7 @@ Don't forget to delete the output HDFS location, before submitting the job again
 hadoop fs -rm -r /var/out/wordcount/
 ```
 
-### Accumulators: Text Analysis
+### Accumulators and Broadcast Variables: Text Analysis
 
 Accumulators:
 * counters or sums that can be reliably used in parallel processing
