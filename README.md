@@ -111,7 +111,7 @@ hadoop fs -rm -r /var/out/wordcount/
 
 ### Accumulators and Broadcast Variables: Text Analysis
 
-Accumulators:
+#### Accumulators
 * counters or sums that can be reliably used in parallel processing
 * native support for numeric types, extensions possible via API
 * workers (tranformation) can modify, but cannot read
@@ -119,7 +119,36 @@ Accumulators:
 
 See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#accumulators-a-nameaccumlinka) for more details.
 
-The problem of text analysis expands on the _word count_ example from the [previous section](#rdd-operations-word-count). Accumulators are applied to collect standard and overly not too interesting facts about the analysed text, such as a total number of characters and words. 
+#### Broadcast Variables
+* allow for an efficient sharing of potentially large data sets
+* workers have read-only access
+* useful for reference data lookups
+
+See the official [Programming Guide](http://spark.apache.org/docs/latest/programming-guide.html#broadcast-variables) for more details.
+
+#### The Problem
+The problem of text analysis expands on the _word count_ example from the [previous section](#rdd-operations-word-count). 
+
+Accumulators are applied to collect standard and overly not too interesting facts about the analysed text, such as a total number of characters and words:
+
+```
+class TextAnalyser(val sc: SparkContext, ...) {
+  ...
+  // Instance variables
+  val _totalChars = sc.accumulator(0, "Total Characters")
+  val _totalWords = sc.accumulator(0, "Total Words")
+  ...
+  // In a worker thread
+  def analyse(rdd: RDD[String]): TextStats = {
+    ...
+    // This limits serialization to the reference variables only
+    val totalChars = _totalChars
+    val totalWords = _totalWords
+    ...
+    // Accumulators can be safely used in parallel computations
+    .map(x => {totalWords += 1; x})
+    ...
+```
 
 Arguably the most exciting part is an effort to capture the essence of a piece of an English text, such as a book, within _N_ most frequently used words. 
 
@@ -129,10 +158,13 @@ The actual word count naturally makes use of the logic implemented in the _word 
 * word count pairs are sorted by counts rather than alphabetically
 * descending sort order guarantees the most frequent pairs are always on top of the list
 
+This is when broadcast variables come into play. The list of common words could potentially run long and it would be ineffiecient to create a copy in a each and every worker. Using a broadcast variable helps performance via caching and reduced network traffic due to a specialized broadcast protocol. It's worthwhile mentioning that broadcasted data is subject of (de)serialization.
+
 Code excerpt:
 ```
 ...
-.filter(!commonWords.contains(_))  // Filter out all too common words
+// Like accumulators a Broadcast is a wrapper, the 'value' method provides access to the actual data.
+.filter(!commonWords.value.contains(_))  // Filter out all too common words
 .map((_, 1))
 .reduceByKey(_ + _)
 .sortBy(_._2, ascending = false)
@@ -148,7 +180,6 @@ characters: 568889, words: 101838, the most frequent words:
 (ned,283)
 (sea,273)
 ```
-
 Source: [TextAnalyser.scala](https://github.com/zezutom/spark-by-example/blob/master/src/main/scala/basic/TextAnalyser.scala), [TextAnalyserTest.scala](https://github.com/zezutom/spark-by-example/blob/master/src/test/scala/basic/TextAnalyserTest.scala)
 
 #### Run the Example
