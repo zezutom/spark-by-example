@@ -29,7 +29,11 @@ $HADOOP_PREFIX/bin/hdfs namenode -format localnode
 ```
 $HADOOP_PREFIX/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start namenode
 ```
-##### Step 3 - Create a Log Directory
+##### Step 3 - Start a Data Node
+```
+$HADOOP_PREFIX/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script hdfs start datanode
+```
+##### Step 4 - Create a Log Directory
 ```
 hadoop fs -mkdir -p /var/log
 ```
