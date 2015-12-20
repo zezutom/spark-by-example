@@ -8,9 +8,7 @@ import scala.io.Source
 
 /**
   * Run as:
-  * $SPARK_HOME/bin/spark-submit \
-  * --class "basic.TestAnalyser" \
-  * target/scala-2.11/spark-by-example_2.11-1.0.jar
+
   *
   * Please note, this example uses an e-text book '20.000 Leagues under the Sea' by Jules Verne
   * (courtesy: Project Gutenberg)
@@ -39,15 +37,19 @@ import scala.io.Source
   */
 class TextAnalyser(val sc: SparkContext, val topN: Int) {
 
-  def analyse(rdd: RDD[String]): TextStats = {
-    val commonWords = Source.fromInputStream(getClass.getResourceAsStream("/commonwords.txt"))
-      .getLines()
-      .filter(!_.isEmpty)
-      .filter(!_.startsWith("#"))   // Comments
-      .toList
-    val totalChars = sc.accumulator(0, "Total Characters")
-    val totalWords = sc.accumulator(0, "Total Words")
+  val _commonWords = sc.broadcast(
+    Source.fromInputStream(getClass.getResourceAsStream("/commonwords.txt"))
+    .getLines()
+    .filter(!_.isEmpty)
+    .filter(!_.startsWith("#"))   // Comments
+    .toList)
+  val _totalChars = sc.accumulator(0, "Total Characters")
+  val _totalWords = sc.accumulator(0, "Total Words")
 
+  def analyse(rdd: RDD[String]): TextStats = {
+    val commonWords = _commonWords
+    val totalChars = _totalChars
+    val totalWords = _totalWords
     val wordCounts = rdd
       .map(x => { totalChars += x.length; x})
       .flatMap(_.split("\\s"))          // Split on any white character
@@ -57,7 +59,7 @@ class TextAnalyser(val sc: SparkContext, val topN: Int) {
       .toLowerCase)
       .filter(!_.isEmpty)               // Filter out any non-words
       .map(x => {totalWords += 1; x})
-      .filter(!commonWords.contains(_))  // Filter out all too common words
+      .filter(!commonWords.value.contains(_))  // Filter out all too common words
       .map((_, 1))
       .reduceByKey(_ + _)
       .sortBy(_._2, ascending = false)
