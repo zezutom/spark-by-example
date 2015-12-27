@@ -11,7 +11,7 @@ import org.apache.spark.rdd.RDD
   */
 class WordCount extends Transformer[String, (String, Int)] {
 
-  def transform(rdd: RDD[String]): RDD[(String, Int)] = {
+  override def transform(rdd: RDD[String]): RDD[(String, Int)] = {
     rdd
     .flatMap(_.split("\\s"))    // Split on any white character
     .map(_.replaceAll(
