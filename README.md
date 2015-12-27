@@ -162,12 +162,15 @@ This is when broadcast variables come into play. The list of common words could 
 
 Code excerpt:
 ```
-...
-// Like accumulators a Broadcast is a wrapper, the 'value' method provides access to the actual data.
-.filter(!commonWords.value.contains(_))  // Filter out all too common words
-.map((_, 1))
-.reduceByKey(_ + _)
-.sortBy(_._2, ascending = false)
+class TextAnalyser(val sc: SparkContext, ...) {
+  ...
+  val _commonWords = sc.broadcast(TextAnalyser.loadCommonWords())
+  ...
+  // Like accumulators a Broadcast is a wrapper, the 'value' method provides access to the actual data.
+  .filter(!commonWords.value.contains(_))  // Filter out all too common words
+  .map((_, 1))
+  .reduceByKey(_ + _)
+  .sortBy(_._2, ascending = false)
 ```
 
 Now, the fun part. Forget the boring 'loremipsum' and reach out for some genuine master piece, such as _20.000 Leagues under the Sea_ by Jules Verne. Courtesy of [textfiles.com](http://www.textfiles.com). Here is what the text analyser concluded about the remarkable book:
