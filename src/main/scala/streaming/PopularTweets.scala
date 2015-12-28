@@ -23,8 +23,10 @@ class PopularTweets(val windowDuration: Duration, val slideDuration: Duration) e
       .filter(_.startsWith("#"))
       .filter(_.matches("^#[a-zA-Z0-9]+$"))
       .map((_, 1))
+//      .reduceByKey(_ + _)
       .reduceByKeyAndWindow(_ + _, _ - _, windowDuration, slideDuration)
       .transform(_.sortBy(_._2, ascending = false))
+      .transform(_.sortBy(_._1))
 }
 
 object PopularTweets {
