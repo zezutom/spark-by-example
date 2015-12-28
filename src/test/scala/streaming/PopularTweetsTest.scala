@@ -31,7 +31,7 @@ class PopularTweetsTest extends StreamingSuiteBase {
   }
 
   private def verify(input: List[List[Status]], expected: List[List[(String, Int)]]): Unit = {
-    testOperation[Status, (String, Int)](input, popularTweets().transform, expected, useSet = true)
+    testOperation[Status, (String, Int)](input, popularTweets().transform _, expected, useSet = true)
   }
 
   private def popularTweets(): PopularTweets = new PopularTweets(Seconds(60 * 2), Seconds(1))
