@@ -15,7 +15,7 @@
 #### Toolbox
 * Apache Spark 1.5.2 compiled for Scala 2.11
 * Hadoop 2.7.1
-* Scala 2.11.7
+* Scala 2.10.4
 * SBT 0.13.9
 
 #### Preparation Steps
