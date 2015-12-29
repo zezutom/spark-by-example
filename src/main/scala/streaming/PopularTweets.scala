@@ -13,19 +13,18 @@ import twitter4j.Status
   *
   * $SPARK_HOME/bin/spark-submit \
   * --class "streaming.PopularTweets" \
-  * target/scala-2.11/spark-by-example-assembly-1.0.jar
+  * target/scala-2.10/spark-by-example-assembly-1.0.jar
   */
-class PopularTweets(val windowDuration: Duration, val slideDuration: Duration) extends StreamTransformer[Status, (String, Int)] {
-  override def transform(stream: DStream[Status]): DStream[(String, Int)] =
+class PopularTweets(val windowDuration: Duration, val slideDuration: Duration) extends StreamTransformer[Status, (String, Long)] {
+  override def transform(stream: DStream[Status]): DStream[(String, Long)] =
     stream
       .map(_.getText)
       .flatMap(_.split(" "))
       .filter(_.startsWith("#"))
       .filter(_.matches("^#[a-zA-Z0-9]+$"))
-      .map((_, 1))
-      .reduceByKeyAndWindow(_ + _, _ - _, windowDuration, slideDuration)
+      .countByValueAndWindow(windowDuration, slideDuration)
+      .transform(_.sortByKey())
       .transform(_.sortBy(_._2, ascending = false))
-      .transform(_.sortBy(_._1))
 }
 
 object PopularTweets {
@@ -33,13 +32,13 @@ object PopularTweets {
   def main(args: Array[String]) {
 
     // Instantiate streaming context
-    val ssc = AppUtil.ssc("Trending Tweets", 1)
+    val ssc = AppUtil.ssc("Popular Tweets", 1)
 
     // Connect to Twitter's public stream
     val stream = TwitterUtils.createStream(ssc, AppUtil.twitterAuth())
 
-    // Watch for popular tweets (2-min sliding window)
-    new PopularTweets(Seconds(60 * 2), Seconds(1))
+    // Watch for popular tweets over the last five minutes
+    new PopularTweets(Seconds(60 * 5), Seconds(1))
       .transform(stream)
       .print(10)
 
