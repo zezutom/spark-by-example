@@ -90,12 +90,12 @@ hadoop fs -copyFromLocal src/main/resources/loremipsum.txt /var/log/
 ##### Step 2 - Build the Project
 Run the following command in the project root directory:
 ```
-sbt package
+sbt clean assembly
 ```
 ##### Step 3 - Submit to Spark
 Assuming your local installation of Hadoop is up-n-running, the text file has been copied to HDFS and the project has been built, you are ready to submit the application to Spark. To do so, run the following command while in the project root directory:
 ```
-$SPARK_HOME/bin/spark-submit --class "basic.WordCount" target/scala-2.11/spark-by-example_2.11-1.0.jar
+$SPARK_HOME/bin/spark-submit --class "basic.WordCount" target/scala-2.10/spark-by-example-assembly-1.0.jar
 ```
 
 #### View the Results
@@ -202,7 +202,7 @@ sbt package
 ```
 ##### Step 4 - Submit to Spark
 ```
-$SPARK_HOME/bin/spark-submit --class "basic.TextAnalyser" target/scala-2.11/spark-by-example_2.11-1.0.jar
+$SPARK_HOME/bin/spark-submit --class "basic.TextAnalyser" target/scala-2.10/spark-by-example-assembly-1.0.jar
 ```
 
 #### View the Results
