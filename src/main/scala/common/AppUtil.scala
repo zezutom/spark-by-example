@@ -16,7 +16,7 @@ import scala.io.Source
 object AppUtil {
 
   def sparkConf(appName: String): SparkConf =
-    new SparkConf().setMaster("local[2]").setAppName(appName)
+    new SparkConf().setMaster(loadConf().getProperty("master.url")).setAppName(appName)
 
   def sc(appName: String): SparkContext =
     new SparkContext(sparkConf(appName))
@@ -42,6 +42,19 @@ object AppUtil {
     */
   def twitterAuth(confEnv: String = "TWITTER_CONF", defaultPath: String = "/twitter.conf"): Option[OAuthAuthorization] = {
 
+    val conf = loadConf(confEnv, defaultPath)
+
+    val authConf = new ConfigurationBuilder()
+      .setDebugEnabled(true)
+      .setOAuthConsumerKey(conf.getProperty("consumerKey"))
+      .setOAuthConsumerSecret(conf.getProperty("consumerSecret"))
+      .setOAuthAccessToken(conf.getProperty("accessToken"))
+      .setOAuthAccessTokenSecret(conf.getProperty("accessTokenSecret"))
+      .build()
+    Some(new OAuthAuthorization(authConf))
+  }
+
+  def loadConf(confEnv: String = "SPARK_BY_EXAMPLE_CONF", defaultPath: String = "/app.conf"): Properties = {
     val conf = new Properties()
 
     // Read the config from the filesystem, or fall back to the bundled one (not recommended, see above)
@@ -51,13 +64,6 @@ object AppUtil {
       case _ =>
         conf.load {getClass.getResourceAsStream(defaultPath)}
     }
-    val authConf = new ConfigurationBuilder()
-      .setDebugEnabled(true)
-      .setOAuthConsumerKey(conf.getProperty("consumerKey"))
-      .setOAuthConsumerSecret(conf.getProperty("consumerSecret"))
-      .setOAuthAccessToken(conf.getProperty("accessToken"))
-      .setOAuthAccessTokenSecret(conf.getProperty("accessTokenSecret"))
-      .build()
-    Some(new OAuthAuthorization(authConf))
+    conf
   }
 }
