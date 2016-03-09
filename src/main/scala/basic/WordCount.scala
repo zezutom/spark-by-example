@@ -19,8 +19,8 @@ class WordCount extends Transformer[String, (String, Int)] {
       .trim
       .toLowerCase)
     .filter(!_.isEmpty)         // Filter out any non-words
-    .map(word => (word, 1))     // Finally, count words
-    .reduceByKey(_ + _)
+    .map((_, 1))                // Initialize word count pairs
+    .reduceByKey(_ + _)         // Finally, count words
     .sortByKey()                // and sort the word counts in a lexical order
   }
 }

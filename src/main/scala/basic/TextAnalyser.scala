@@ -7,13 +7,10 @@ import org.apache.spark.rdd.RDD
 import scala.io.Source
 
 /**
-  * Run as:
-
-  *
-  * Please note, this example uses an e-text book '20.000 Leagues under the Sea' by Jules Verne
+  * This example uses an e-text book '20.000 Leagues under the Sea' by Jules Verne
   * (courtesy: Project Gutenberg)
   *
-  * To run this example 'as is' please:
+  * To run this example please:
   *
   * 1. Download the file
   *     http://www.textfiles.com/etext/FICTION/2000010.txt
@@ -37,39 +34,42 @@ import scala.io.Source
   */
 class TextAnalyser(val sc: SparkContext, val topN: Int) {
   val _commonWords = sc.broadcast(TextAnalyser.loadCommonWords())
-  val _totalChars = sc.accumulator(0, "Total Characters")
-  val _totalWords = sc.accumulator(0, "Total Words")
+  val _totalChars = sc.accumulator(0L, "Total Characters")
 
   def analyse(rdd: RDD[String]): TextStats = {
     val commonWords = _commonWords
     val totalChars = _totalChars
-    val totalWords = _totalWords
-    val wordCounts = rdd
-      .map(x => { totalChars += x.length; x})
+
+    // Count the total number of characters
+    rdd.foreach(totalChars += _.length)
+
+    // Populate words
+    val words = rdd
       .flatMap(_.split("\\s"))          // Split on any white character
       .map(_.replaceAll(
       "[,.!?:;]", "")                   // Remove punctuation and transfer to lowercase
       .trim
       .toLowerCase)
       .filter(!_.isEmpty)               // Filter out any non-words
-      .map(x => {totalWords += 1; x})
+
+    // Identify the most frequently used words
+    val wordCounts = words
       .filter(!commonWords.value.contains(_))  // Filter out all too common words
       .map((_, 1))
       .reduceByKey(_ + _)
       .sortBy(_._2, ascending = false)
 
-    new TextStats(totalChars.value, totalWords.value, wordCounts.take(topN))
+    TextStats(totalChars.value, words.count(), wordCounts.take(topN))
   }
 }
 
-class TextStats(val totalChars: Int, val totalWords: Int, val mostFrequentWords: Seq[(String, Int)]) {
+case class TextStats(totalChars: Long, totalWords: Long, mostFrequentWords: Seq[(String, Int)]) {
   override def toString = s"characters: $totalChars, " +
     s"words: $totalWords, " +
     "the most frequent words:\n" + mostFrequentWords.mkString("\n")
 }
 
 object TextAnalyser {
-
 
   def loadCommonWords(): List[String] =
     Source.fromInputStream(getClass.getResourceAsStream("/commonwords.txt"))
